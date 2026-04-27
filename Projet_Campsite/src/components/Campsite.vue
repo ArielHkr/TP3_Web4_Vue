@@ -35,15 +35,7 @@
         </p>
       </div>
 
-      <div class="card-footer d-flex flex-column gap-2">
-        <RouterLink :to="{ name: 'CampsiteDetails', params: { id: campsite._id } }">
-          Voir les détails
-        </RouterLink>
-
-        <RouterLink :to="{ name: 'Campsites', query: { type: campsite.type } }">
-          Voir les campings de type : {{ campsite.type }}
-        </RouterLink>
-      </div>
+  
     </div>
   </div>
 </template>

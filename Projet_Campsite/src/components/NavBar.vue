@@ -8,12 +8,12 @@
         <li class="nav-item">
           <router-link class="nav-link" to="/campsites">Campsites</router-link>
         </li>
-        <!-- <li class="nav-item" v-if="!isLogged">
+        <li class="nav-item" v-if="!isLogged">
           <router-link class="nav-link" :to="{ name: 'Login' }">Connexion</router-link>
         </li>
         <li class="nav-item me-3" v-else>
           <a href="#" @click="logout" class="nav-link">Déconnexion</a>
-        </li> -->
+        </li>
       </ul>
     </div>
   </nav>

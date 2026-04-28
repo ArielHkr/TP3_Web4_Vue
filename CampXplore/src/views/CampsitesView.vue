@@ -21,7 +21,7 @@
       </div>
 
       <div v-else class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <Campsite
+        <CampsiteCard
           v-for="campsite in campsites"
           :key="campsite._id"
           :campsite="campsite"
@@ -32,18 +32,17 @@
 </template>
 
 <script setup>
-import NavBar from '@/components/NavBar.vue'
-import Campsite from '@/components/Campsite.vue'
+import CampsiteCard from '@/components/CampsiteCard.vue'
 import { onMounted, ref } from 'vue'
 
 const campsites = ref([])
 const isLoading = ref(false)
 
-const apiUrl = import.meta.env.VITE_API_URL
-const apiKey = import.meta.env.VITE_API_KEY
+const apiUrl = import.meta.env.VITE_API_URL;
+const apiKey = import.meta.env.VITE_API_KEY;
 
 const getCampsites = async () => {
-  isLoading.value = true
+  isLoading.value = true;
 
   try {
     const res = await fetch(`${apiUrl}/api/campsites`, {
@@ -51,18 +50,20 @@ const getCampsites = async () => {
       headers: {
         'x-api-key': apiKey,
       },
-    })
+    });
 
-    const data = await res.json()
-    campsites.value = data.data
+    const data = await res.json();
+        console.log(data);
+
+    campsites.value = data.data;
   } catch (err) {
-    console.log(err)
+    console.log(err);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 }
 
 onMounted(() => {
-  getCampsites()
+  getCampsites();
 })
 </script>

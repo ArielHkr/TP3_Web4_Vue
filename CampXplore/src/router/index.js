@@ -16,9 +16,14 @@ const router = createRouter({
     {
       path: '/campsites',
       name: 'campsites',
-      component: () => import('@/views/Campsites.vue'),
+      component: () => import('@/views/CampsitesView.vue'),
     },
     {
+      path: '/reservations',
+      name: 'reservations',
+      component: () => import('@/views/ReservationsView.vue')
+    },
+    { 
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/NotFound.vue'),

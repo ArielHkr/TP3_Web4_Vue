@@ -1,16 +1,31 @@
 <template>
-  <nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
-      <ul class="navbar-nav ms-auto">
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="">À propos</a>
-        </li> -->
+      <RouterLink class="navbar-brand fw-bold text-success" to="/">
+        CampXplore
+      </RouterLink>
+
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
         <li class="nav-item">
-          <router-link class="nav-link" to="/campsites">Campsites</router-link>
+          <RouterLink class="nav-link" to="/">Accueil</RouterLink>
         </li>
+
+        <li class="nav-item">
+          <RouterLink class="nav-link" to="/campsites">Emplacements</RouterLink>
+        </li>
+
+        <li class="nav-item" v-if="isLogged">
+          <RouterLink class="nav-link" to="/reservations">
+            Mes réservations
+          </RouterLink>
+        </li>
+
         <li class="nav-item" v-if="!isLogged">
-          <router-link class="nav-link" :to="{ name: 'Login' }">Connexion</router-link>
+          <RouterLink class="btn btn-success btn-sm px-3" :to="{ name: 'Login' }">
+            Connexion
+          </RouterLink>
         </li>
+
         <li class="nav-item me-3" v-else>
           <a href="#" @click="logout" class="nav-link">Déconnexion</a>
         </li>

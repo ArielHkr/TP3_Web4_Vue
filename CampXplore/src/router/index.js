@@ -23,6 +23,12 @@ const router = createRouter({
       name: 'reservations',
       component: () => import('@/views/ReservationsView.vue')
     },
+    {
+      path: '/campsites/:id',
+      name: 'CampsiteDetailsView',
+      component: () => import('@/views/CampsiteDetailsView.vue'),
+      props: true,
+    },
     { 
       path: '/:pathMatch(.*)*',
       name: 'NotFound',

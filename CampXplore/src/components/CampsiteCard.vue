@@ -33,9 +33,10 @@
           <strong>Commodités :</strong>
           {{ campsite.amenities.join(", ") }}
         </p>
+          <RouterLink :to="{ name: 'CampsiteDetailsView', params: { id: campsite._id } }"
+          >Détails</RouterLink
+        >
       </div>
-
-  
     </div>
   </div>
 </template>

@@ -38,12 +38,12 @@ import { onMounted, ref } from 'vue'
 const campsites = ref([])
 const isLoading = ref(false)
 
-const apiUrl = import.meta.env.VITE_API_URL;
-const apiKey = import.meta.env.VITE_API_KEY;
+
 
 const getCampsites = async () => {
   isLoading.value = true;
-
+const apiUrl = import.meta.env.VITE_API_URL;
+const apiKey = import.meta.env.VITE_API_KEY;
   try {
     const res = await fetch(`${apiUrl}/api/campsites`, {
       method: 'GET',
@@ -53,7 +53,7 @@ const getCampsites = async () => {
     });
 
     const data = await res.json();
-        console.log(data);
+        // console.log(data);
 
     campsites.value = data.data;
   } catch (err) {

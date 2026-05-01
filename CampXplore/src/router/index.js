@@ -21,20 +21,44 @@ const router = createRouter({
     {
       path: '/reservations',
       name: 'reservations',
-      component: () => import('@/views/ReservationsView.vue')
+      component: () => import('@/views/ReservationsView.vue'),
+      meta: {requiresAuth: true}
+
     },
     {
       path: '/campsites/:id',
       name: 'CampsiteDetailsView',
       component: () => import('@/views/CampsiteDetailsView.vue'),
       props: true,
+      meta: {requiresAuth: true}
     },
     { 
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/NotFound.vue'),
     },
+    {
+      path: '/register',
+      name: 'Register',
+      component: () => import('@/views/Register.vue'),
+    },
+    {
+       path: '/reservations/:id',
+       name: 'ReservationDetails',
+       component: () => import('@/views/ReservationDetails.vue'),
+      meta: {requiresAuth: true}
+    }
   ],
 })
 
+router.beforeEach((to) =>{
+      const token = localStorage.getItem('token');
+      if(!token && to.meta.requiresAuth){
+        return {
+          name: 'Login',
+          query: { redirect: to.fullPath },
+       }
+      }
+}
+)
 export default router

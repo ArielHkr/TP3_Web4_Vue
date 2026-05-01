@@ -50,7 +50,7 @@
             <option value="glamping">Glamping</option>
            <option value="arriere-pays">Arrière-pays</option>
             <option value="autre">Autre</option>
-</select>
+        </select>
           </div>
 
           <div class="col-lg-3">

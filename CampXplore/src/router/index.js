@@ -47,6 +47,12 @@ const router = createRouter({
        name: 'ReservationDetails',
        component: () => import('@/views/ReservationDetails.vue'),
       meta: {requiresAuth: true}
+    },
+    {
+      path: '/profil',
+      name: 'profil',
+      component:() => import('@/views/Profil.vue'),
+      meta: {requiresAuth: true}
     }
   ],
 })

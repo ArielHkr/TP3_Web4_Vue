@@ -21,7 +21,7 @@
         </li>
         <li class="nav-item me-3" v-else>
           <a href="#" @click="logout" class="nav-link">Déconnexion</a>
-        </li>
+          <router-link to="/profil">profil</router-link>  </li>
       </ul>
     </div>
   </nav>

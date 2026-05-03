@@ -2,18 +2,18 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
-  const isLoading = ref(false)
-  const error = ref('')
-  const success = ref('')
+  const isLoading = ref(false);
+  const error = ref('');
+  const success = ref('');
+  const user = ref(null);
+
+  const apiUrl = import.meta.env.VITE_API_URL
+  const apiKey = import.meta.env.VITE_API_KEY
 
   const register = async (form) => {
     isLoading.value = true
     error.value = ''
     success.value = ''
-
-    const apiUrl = import.meta.env.VITE_API_URL
-    const apiKey = import.meta.env.VITE_API_KEY
-
     try {
       const res = await fetch(`${apiUrl}/api/auth/register`, {
         method: 'POST',
@@ -44,8 +44,6 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
     error.value = ''
 
-    const apiUrl = import.meta.env.VITE_API_URL
-    const apiKey = import.meta.env.VITE_API_KEY
 
     try {
       const resp = await fetch(`${apiUrl}/api/auth/login`, {
@@ -75,11 +73,36 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const getUser = async () => {
+   try{
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${apiUrl}/api/auth/profile`, {
+      method : 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      Authorization: `Bearer ${token}`,
+      },
+    })
+    const result = await res.json();
+    if(!res.ok){
+        throw new Error(result.message || 'Erreur lors de la récupération.')
+    }
+    user.value = result.data;
+        console.log(user)
+
+   }catch(err){
+      error.value = err.message;
+      return false;
+   }
+  }
   return {
     isLoading,
     error,
     success,
     register,
     login,
+    getUser,
+    user,
   }
 })

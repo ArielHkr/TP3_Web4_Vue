@@ -44,7 +44,6 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
     error.value = ''
 
-
     try {
       const resp = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
@@ -74,6 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const getUser = async () => {
+    isLoading.value=false;
    try{
     const token = localStorage.getItem('token');
     const res = await fetch(`${apiUrl}/api/auth/profile`, {
@@ -89,13 +89,80 @@ export const useAuthStore = defineStore('auth', () => {
         throw new Error(result.message || 'Erreur lors de la récupération.')
     }
     user.value = result.data;
-        console.log(user)
-
-   }catch(err){
+   }
+   catch(err){
       error.value = err.message;
       return false;
    }
   }
+ const userUpdate = async (firstName, lastName, phone, role) => {
+  isLoading.value = true
+  error.value = ''
+  success.value = ''
+
+  const token = localStorage.getItem('token')
+
+  try {
+    const res = await fetch(`${apiUrl}/api/auth/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ firstName, lastName, phone, role }),
+    })
+
+    const result = await res.json()
+
+    if (!res.ok) {
+      throw new Error(result.message || `Erreur lors de la mise à jour de l'utilisateur.`)
+    }
+
+    user.value = result.data
+    success.value = 'Mise à jour réussie.'
+    return true
+  } catch (err) {
+    error.value = err.message
+    return false
+  } finally {
+    isLoading.value = false
+  }
+}
+
+  const changerMotDePasse = async (currentPassword, newPassword) => {
+  isLoading.value = true
+  error.value = ''
+  success.value = ''
+
+  const token = localStorage.getItem('token')
+
+  try {
+    const res = await fetch(`${apiUrl}/api/auth/password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    })
+
+    const result = await res.json()
+
+    if (!res.ok) {
+      throw new Error(result.message || 'Erreur lors du changement de mot de passe.')
+    }
+
+    success.value = 'Mot de passe modifié avec succès.'
+    return true
+  } catch (err) {
+    error.value = err.message
+    return false
+  } finally {
+    isLoading.value = false
+  }
+}
   return {
     isLoading,
     error,
@@ -104,5 +171,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     getUser,
     user,
+    changerMotDePasse,
+    userUpdate
   }
 })

@@ -22,6 +22,7 @@
           <button type="submit" class="btn btn-primary w-100" :disabled="authStore.isLoading">
             {{ authStore.isLoading ? 'Connexion...' : 'Se connecter' }}
           </button>
+          <router-link class="nav-link" :to="{ name: 'Register' }">Créer un compte</router-link>
         </form>
       </div>
     </div>

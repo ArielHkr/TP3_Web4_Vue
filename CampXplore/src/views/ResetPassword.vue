@@ -11,6 +11,11 @@
         <input type="password" id="newPassword" v-model="newPassword">
       </div>
 
+      <div>
+        <label for="confirmPassword">Confirmer le nouveau mot de passe:</label>
+        <input type="password" id="confirmPassword" v-model="confirmPassword">
+      </div>
+
       <div v-if="messageErreur">{{ messageErreur }}</div>
       <div v-if="authStore.error">{{ authStore.error }}</div>
       <div v-if="authStore.success">{{ authStore.success }}</div>
@@ -18,13 +23,12 @@
       <button type="submit" :disabled="authStore.isLoading || !champModifie">
         {{ authStore.isLoading ? 'Modification...' : 'Changer le mot de passe' }}
       </button>
-
-      
     </form>
   </div>
 </template>
 
 <script setup>
+
 import { ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
@@ -32,18 +36,28 @@ const authStore = useAuthStore()
 
 const currentPassword = ref('')
 const newPassword = ref('')
+const confirmPassword = ref('')
 const messageErreur = ref('')
 const champModifie = ref(false)
 
-watch([currentPassword, newPassword], () => {
+watch([currentPassword, newPassword, confirmPassword], () => {
   champModifie.value = true
 })
 
 const changerMotDePasse = async () => {
   messageErreur.value = ''
 
-  if (!currentPassword.value.trim() || !newPassword.value.trim()) {
+  if (
+    !currentPassword.value.trim() ||
+    !newPassword.value.trim() ||
+    !confirmPassword.value.trim()
+  ) {
     messageErreur.value = 'Tous les champs sont obligatoires.'
+    return
+  }
+
+  if (newPassword.value !== confirmPassword.value) {
+    messageErreur.value = 'Le nouveau mot de passe et sa confirmation ne correspondent pas.'
     return
   }
 
@@ -55,6 +69,7 @@ const changerMotDePasse = async () => {
   if (ok) {
     currentPassword.value = ''
     newPassword.value = ''
+    confirmPassword.value = ''
     champModifie.value = false
   }
 }

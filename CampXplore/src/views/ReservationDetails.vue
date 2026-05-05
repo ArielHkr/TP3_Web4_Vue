@@ -34,37 +34,107 @@
           <strong>Statut :</strong>
 
           <span
-            class="badge bg-warning text-dark"
             v-if="reservationStore.reservation.status === 'pending'"
+            class="badge bg-warning text-dark"
           >
             En attente
           </span>
 
           <span
-            class="badge bg-success"
             v-else-if="reservationStore.reservation.status === 'confirmed'"
+            class="badge bg-success"
           >
             Confirmée
           </span>
 
           <span
-            class="badge bg-danger"
             v-else-if="reservationStore.reservation.status === 'cancelled'"
+            class="badge bg-danger"
           >
             Annulée
           </span>
 
-          <span class="badge bg-secondary" v-else>
+          <span v-else class="badge bg-secondary">
             {{ reservationStore.reservation.status }}
           </span>
         </p>
+
+        <div class="mt-4">
+          <button
+            v-if="reservationStore.reservation.status === 'pending'"
+            class="btn btn-outline-danger"
+            :disabled="reservationStore.isLoading"
+            @click="showCancelModal = true"
+          >
+            Annuler la réservation
+          </button>
+
+          <p v-else class="text-muted mb-0">
+            N/A
+          </p>
+        </div>
+
+        <p v-if="successMessage" class="text-success mt-3">
+          {{ successMessage }}
+        </p>
+
+        <p v-if="reservationStore.error" class="text-danger mt-3">
+          {{ reservationStore.error }}
+        </p>
       </div>
     </div>
+
+    <div
+      v-if="showCancelModal"
+      class="modal fade show d-block"
+      tabindex="-1"
+      role="dialog"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmer l’annulation</h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="showCancelModal = false"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p class="mb-0">
+              Voulez-vous vraiment annuler cette réservation ?
+            </p>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="showCancelModal = false"
+            >
+              Non, garder
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-danger"
+              :disabled="reservationStore.isLoading"
+              @click="confirmCancelReservation"
+            >
+              Confirmer l’annulation
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showCancelModal" class="modal-backdrop fade show"></div>
   </main>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useReservationStore } from '@/stores/reservation'
 
@@ -72,8 +142,23 @@ const route = useRoute()
 const router = useRouter()
 const reservationStore = useReservationStore()
 
+const successMessage = ref('')
+const showCancelModal = ref(false)
+
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('fr-CA')
+}
+
+const confirmCancelReservation = async () => {
+  successMessage.value = ''
+
+  try {
+    await reservationStore.updateReservationStatus(route.params.id, 'cancelled')
+    successMessage.value = 'Réservation annulée avec succès.'
+    showCancelModal.value = false
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 onMounted(() => {

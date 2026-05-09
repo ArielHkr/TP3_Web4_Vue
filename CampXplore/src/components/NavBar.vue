@@ -27,7 +27,9 @@
         <li class="nav-item" v-if="!isLogged">
           <router-link class="nav-link" :to="{ name: 'Register' }">Inscription</router-link>
         </li>
-
+         <li class="nav-item" v-if="isLogged && isAdmin">
+          <router-link class="nav-link" :to="{ name: 'AdminReservations' }">Gestion des réservations</router-link>
+        </li>
         <li class="nav-item" v-if="isLogged">
           <router-link class="nav-link" to="/profil">
           Salut  {{ authStore.user?.firstName }} !
@@ -46,17 +48,28 @@
 import { useRouter, useRoute } from 'vue-router'
 import { onBeforeUnmount, onMounted, ref, computed, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { jwtDecode } from 'jwt-decode'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
 
-const tokenRef = ref(getToken())
+const tokenRef = ref(localStorage.getItem('token'))
+
 const isLogged = computed(() => !!tokenRef.value)
 
-function getToken() {
-  return localStorage.getItem('token')
-}
+const decodedToken = computed(() => {
+  if (!tokenRef.value) return null
+
+  try {
+    return jwtDecode(tokenRef.value)
+  } catch (err) {
+    console.log(err)
+    return null
+  }
+})
+
+const isAdmin = computed(() => decodedToken.value?.role === 'admin')
 
 async function chargerUser() {
   if (isLogged.value) {
@@ -65,7 +78,7 @@ async function chargerUser() {
 }
 
 watch(route, async () => {
-  tokenRef.value = getToken()
+  tokenRef.value = localStorage.getItem('token')
   await chargerUser()
 })
 
@@ -87,7 +100,7 @@ onBeforeUnmount(() => {
 
 function handlerStorage(e) {
   if (e.key === 'token') {
-    tokenRef.value = getToken()
+    tokenRef.value = localStorage.getItem('token')
   }
 }
 </script>

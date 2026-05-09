@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { jwtDecode } from 'jwt-decode'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,18 +60,45 @@ const router = createRouter({
       name:'resetPassword',
       component: () => import('@/views/ResetPassword.vue'),
       meta: {requiresAuth: true}
-    }
+    },
+    {
+      path:'/AdminReservations',
+      name:'AdminReservations',
+      component: () => import('@/views/GestionReservations.vue'),
+      meta: {requiresAuth: true, role: 'admin'}
+
+    },
+    {
+      path:'/forbidden',
+      name:'Forbidden',
+      component: () => import('@/views/Forbidden.vue'),
+    },
   ],
 })
+router.beforeEach((to) => {
+  const token = localStorage.getItem('token');
 
-router.beforeEach((to) =>{
-      const token = localStorage.getItem('token');
-      if(!token && to.meta.requiresAuth){
-        return {
-          name: 'Login',
-          query: { redirect: to.fullPath },
-       }
-      }
-}
-)
+  if (!token) {
+    if (to.meta.requiresAuth) {
+      return {
+        name: 'Login',
+        query: { redirect: to.fullPath },
+      };
+    }
+
+    return true;
+  }
+
+  const decoded = jwtDecode(token);
+  const role = decoded.role;
+
+  if (to.meta.role && role !== to.meta.role) {
+    return {
+      name: 'Forbidden',
+    };
+  }
+
+  return true;
+});
+
 export default router

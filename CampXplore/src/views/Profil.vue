@@ -10,7 +10,10 @@
         <label for="lastName">Nom:</label>
         <input type="text" v-model="nom" id="lastName">
       </div>
-
+      <div>
+        <label for="role">Role:</label>
+        <input type="text" v-model="role" disabled="true">
+      </div>
       <div>
         <label for="phoneNumber">Téléphone:</label>
         <input
@@ -47,6 +50,7 @@ const authStore = useAuthStore()
 const nom = ref('')
 const prenom = ref('')
 const phoneNumber = ref('')
+const role = ref('')
 const champModifie = ref(false)
 const messageErreur = ref('')
 
@@ -57,6 +61,7 @@ const remplirChamps = () => {
   nom.value = user.lastName || 'N/A'
   prenom.value = user.firstName || 'N/A'
   phoneNumber.value = user.phone || 'N/A'
+  role.value = user.role || 'N/A'
 }
 
 const enregistrer = async () => {

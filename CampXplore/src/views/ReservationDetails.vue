@@ -33,24 +33,15 @@
         <p>
           <strong>Statut :</strong>
 
-          <span
-            v-if="reservationStore.reservation.status === 'pending'"
-            class="badge bg-warning text-dark"
-          >
+          <span v-if="reservationStore.reservation.status === 'pending'" class="badge bg-warning text-dark">
             En attente
           </span>
 
-          <span
-            v-else-if="reservationStore.reservation.status === 'confirmed'"
-            class="badge bg-success"
-          >
+          <span v-else-if="reservationStore.reservation.status === 'confirmed'" class="badge bg-success">
             Confirmée
           </span>
 
-          <span
-            v-else-if="reservationStore.reservation.status === 'cancelled'"
-            class="badge bg-danger"
-          >
+          <span v-else-if="reservationStore.reservation.status === 'cancelled'" class="badge bg-danger">
             Annulée
           </span>
 
@@ -59,9 +50,9 @@
           </span>
         </p>
 
-        <div class="mt-4">
+        <div class="mt-4 d-flex gap-2 flex-wrap">
           <button
-            v-if="reservationStore.reservation.status === 'pending'"
+            v-if="reservationStore.reservation.status !== 'cancelled'"
             class="btn btn-outline-danger"
             :disabled="reservationStore.isLoading"
             @click="showCancelModal = true"
@@ -69,9 +60,30 @@
             Annuler la réservation
           </button>
 
-          <p v-else class="text-muted mb-0">
+          <button
+            v-if="reservationStore.reservation.status === 'pending' && isAdmin"
+            class="btn btn-outline-success"
+            :disabled="reservationStore.isLoading"
+            @click="ConfirmerReservation"
+          >
+            Confirmer la réservation
+          </button>
+
+          <button
+            v-else-if="reservationStore.reservation.status === 'confirmed' && isAdmin"
+            class="btn btn-outline-warning"
+            :disabled="reservationStore.isLoading"
+            @click="RemettreEnAttente"
+          >
+            Remettre en attente
+          </button>
+
+          <span
+            v-if="reservationStore.reservation.status === 'cancelled'"
+            class="badge bg-secondary-subtle text-secondary border px-3 py-2"
+          >
             N/A
-          </p>
+          </span>
         </div>
 
         <p v-if="successMessage" class="text-success mt-3">
@@ -120,7 +132,7 @@
               type="button"
               class="btn btn-danger"
               :disabled="reservationStore.isLoading"
-              @click="confirmCancelReservation"
+              @click="AnnulerReservation"
             >
               Confirmer l’annulation
             </button>
@@ -134,10 +146,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useReservationStore } from '@/stores/reservation'
-
+import { jwtDecode } from 'jwt-decode'
 const route = useRoute()
 const router = useRouter()
 const reservationStore = useReservationStore()
@@ -149,19 +161,61 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString('fr-CA')
 }
 
-const confirmCancelReservation = async () => {
+const AnnulerReservation = async () => {
   successMessage.value = ''
+  reservationStore.isLoading = true
 
   try {
     await reservationStore.updateReservationStatus(route.params.id, 'cancelled')
+    await reservationStore.getReservation(route.params.id)
+
     successMessage.value = 'Réservation annulée avec succès.'
     showCancelModal.value = false
   } catch (err) {
     console.log(err)
+  } finally {
+    reservationStore.isLoading = false
   }
 }
 
-onMounted(() => {
-  reservationStore.getReservation(route.params.id)
+const ConfirmerReservation = async () => {
+  successMessage.value = ''
+  reservationStore.isLoading = true
+
+  try {
+    await reservationStore.updateReservationStatus(route.params.id, 'confirmed')
+    await reservationStore.getReservation(route.params.id)
+
+    successMessage.value = 'Réservation confirmée avec succès.'
+  } catch (err) {
+    console.log(err)
+  } finally {
+    reservationStore.isLoading = false
+  }
+}
+
+const RemettreEnAttente = async () => {
+  successMessage.value = ''
+  reservationStore.isLoading = true
+
+  try {
+    await reservationStore.updateReservationStatus(route.params.id, 'pending')
+    await reservationStore.getReservation(route.params.id)
+
+    successMessage.value = 'Réservation remise en attente.'
+  } catch (err) {
+    console.log(err)
+  } finally {
+    reservationStore.isLoading = false
+  }
+}
+ const isAdmin = computed(()=>{
+ const token = localStorage.getItem('token');
+ const decoded = jwtDecode(token);
+ const role = decoded.role;
+  return role ==='admin';
+ })
+onMounted(async () => {
+  await reservationStore.getReservation(route.params.id)
 })
 </script>

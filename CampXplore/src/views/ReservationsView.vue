@@ -72,7 +72,7 @@
                 v-if="reservation.status === 'pending'"
                 class="btn btn-sm btn-outline-danger"
                 :disabled="reservationStore.isLoading"
-                @click="openCancelModal(reservation)"
+                @click="OuvrirModalAnnuler(reservation)"
               >
                 Annuler
               </button>
@@ -95,7 +95,7 @@
     </div>
 
     <div
-      v-if="showCancelModal"
+      v-if="AfficherModalAnnuler"
       class="modal fade show d-block"
       tabindex="-1"
       role="dialog"
@@ -116,10 +116,10 @@
               Voulez-vous vraiment annuler cette réservation ?
             </p>
 
-            <p v-if="selectedReservation" class="mb-0 text-muted">
-              <strong>Campsite :</strong> {{ selectedReservation.campsite.name }}<br />
-              <strong>Date début :</strong> {{ formatDate(selectedReservation.startDate) }}<br />
-              <strong>Date fin :</strong> {{ formatDate(selectedReservation.endDate) }}
+            <p v-if="ReservationSelectionnee" class="mb-0 text-muted">
+              <strong>Campsite :</strong> {{ ReservationSelectionnee.campsite.name }}<br />
+              <strong>Date début :</strong> {{ formatDate(ReservationSelectionnee.startDate) }}<br />
+              <strong>Date fin :</strong> {{ formatDate(ReservationSelectionnee.endDate) }}
             </p>
           </div>
 
@@ -136,7 +136,7 @@
               type="button"
               class="btn btn-danger"
               :disabled="reservationStore.isLoading"
-              @click="confirmCancelReservation"
+              @click="ConfirmerAnnulation"
             >
               Confirmer l’annulation
             </button>
@@ -145,7 +145,7 @@
       </div>
     </div>
 
-    <div v-if="showCancelModal" class="modal-backdrop fade show"></div>
+    <div v-if="AfficherModalAnnuler" class="modal-backdrop fade show"></div>
   </main>
 </template>
 
@@ -155,33 +155,33 @@ import { useReservationStore } from '@/stores/reservation'
 
 const reservationStore = useReservationStore()
 const successMessage = ref('')
-const showCancelModal = ref(false)
-const selectedReservation = ref(null)
+const AfficherModalAnnuler = ref(false)
+const ReservationSelectionnee = ref(null)
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('fr-CA')
 }
 
-const openCancelModal = (reservation) => {
+const OuvrirModalAnnuler = (reservation) => {
   successMessage.value = ''
-  selectedReservation.value = reservation
-  showCancelModal.value = true
+  ReservationSelectionnee.value = reservation
+  AfficherModalAnnuler.value = true
 }
 
 const closeCancelModal = () => {
-  showCancelModal.value = false
-  selectedReservation.value = null
+  AfficherModalAnnuler.value = false
+  ReservationSelectionnee.value = null
 }
 
-const confirmCancelReservation = async () => {
-  if (!selectedReservation.value) {
+const ConfirmerAnnulation = async () => {
+  if (!ReservationSelectionnee.value) {
     return
   }
 
   successMessage.value = ''
 
   try {
-    await reservationStore.updateReservationStatus(selectedReservation.value._id, 'cancelled')
+    await reservationStore.updateReservationStatus(ReservationSelectionnee.value._id, 'cancelled')
     successMessage.value = 'Réservation annulée avec succès.'
     closeCancelModal()
   } catch (err) {

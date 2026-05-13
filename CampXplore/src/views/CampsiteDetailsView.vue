@@ -1,142 +1,238 @@
 <template>
-  <div class="container my-4">
+  <main class="container py-5">
     <div v-if="campsiteStore.campsite">
-      <h1 class="mb-4">Réserver un emplacement</h1>
-      <p>{{ campsiteStore.error }}</p>
-      <section class="mb-4 p-3 border rounded">
-        <h2>{{ campsiteStore.campsite.name }}</h2>
+      <div class="text-center mb-5">
+        <span class="badge rounded-pill text-bg-success px-3 py-2 mb-3">
+          Camping
+        </span>
 
-        <p class="mb-1">
-          <strong>Lieu :</strong> {{ campsiteStore.campsite.location }}
+        <h1 class="fw-bold text-success mb-2">
+          Réserver un emplacement
+        </h1>
+
+        <p class="text-muted mb-0">
+          Préparez votre séjour en pleine nature
         </p>
+      </div>
 
-        <p class="mb-1">
-          <strong>Description :</strong>
-          {{ campsiteStore.campsite.description || 'Aucune description disponible' }}
-        </p>
+      <div v-if="campsiteStore.error" class="alert alert-danger">
+        {{ campsiteStore.error }}
+      </div>
 
-        <p class="mb-1">
-          <strong>Type :</strong> {{ campsiteStore.campsite.type }}
-        </p>
+      <div class="row g-4">
+        <div class="col-12 col-lg-5">
+          <section class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+            <div class="card-header bg-success text-white py-3">
+              <h2 class="h4 mb-0">
+                {{ campsiteStore.campsite.name }}
+              </h2>
+            </div>
 
-        <p class="mb-1">
-          <strong>Prix :</strong>
-          {{ campsiteStore.campsite.pricePerNight }} $ / nuit
-        </p>
+            <div class="card-body p-4">
+              <p class="text-muted mb-4">
+                {{ campsiteStore.campsite.description || 'Aucune description disponible' }}
+              </p>
 
-        <p class="mb-1">
-          <strong>Capacité :</strong>
-          {{ campsiteStore.campsite.capacity }} personne(s)
-        </p>
+              <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                <span class="text-muted">Lieu</span>
+                <strong>{{ campsiteStore.campsite.location }}</strong>
+              </div>
 
-        <p v-if="campsiteStore.campsite.maxVehicleLength" class="mb-1">
-          <strong>Longueur max véhicule :</strong>
-          {{ campsiteStore.campsite.maxVehicleLength }} m
-        </p>
+              <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                <span class="text-muted">Type</span>
+                <span class="badge text-bg-success text-capitalize">
+                  {{ campsiteStore.campsite.type }}
+                </span>
+              </div>
 
-        <p v-if="campsiteStore.campsite.amenities?.length" class="mb-1">
-          <strong>Commodités :</strong>
-          {{ campsiteStore.campsite.amenities.join(', ') }}
-        </p>
-      </section>
-       <div v-if="isLogged">
-        <form @submit.prevent="submitReservation" class="p-3 border rounded" novalidate>
-        <h2 class="mb-3">Informations de réservation</h2>
+              <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                <span class="text-muted">Prix</span>
+                <strong>{{ campsiteStore.campsite.pricePerNight }} $ / nuit</strong>
+              </div>
 
-        <div class="mb-3">
-          <label for="startDate" class="form-label">Date d'arrivée</label>
-          <input
-            id="startDate"
-            v-model="form.startDate"
-            type="date"
-            class="form-control"
-            :class="{ 'is-invalid': errors.startDate }"
-          />
-          <div v-if="errors.startDate" class="invalid-feedback">
-            {{ errors.startDate }}
-          </div>
+              <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                <span class="text-muted">Capacité</span>
+                <strong>{{ campsiteStore.campsite.capacity }} personne(s)</strong>
+              </div>
+
+              <div
+                v-if="campsiteStore.campsite.maxVehicleLength"
+                class="mb-3 d-flex justify-content-between border-bottom pb-2"
+              >
+                <span class="text-muted">Véhicule max</span>
+                <strong>{{ campsiteStore.campsite.maxVehicleLength }} m</strong>
+              </div>
+
+              <div v-if="campsiteStore.campsite.amenities?.length" class="mt-4">
+                <h3 class="h6 fw-bold mb-3">
+                  Commodités
+                </h3>
+
+                <div class="d-flex flex-wrap gap-2">
+                  <span
+                    v-for="amenity in campsiteStore.campsite.amenities"
+                    :key="amenity"
+                    class="badge rounded-pill text-bg-light border"
+                  >
+                    {{ amenity }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
-        <div class="mb-3">
-          <label for="endDate" class="form-label">Date de départ</label>
-          <input
-            id="endDate"
-            v-model="form.endDate"
-            type="date"
-            class="form-control"
-            :class="{ 'is-invalid': errors.endDate }"
-          />
-          <div v-if="errors.endDate" class="invalid-feedback">
-            {{ errors.endDate }}
+        <div class="col-12 col-lg-7">
+          <div v-if="isLogged">
+            <form
+              @submit.prevent="submitReservation"
+              class="card border-0 shadow-sm rounded-4"
+              novalidate
+            >
+              <div class="card-body p-4">
+                <h2 class="h4 fw-bold text-success mb-1">
+                  Informations de réservation
+                </h2>
+
+                <p class="text-muted mb-4">
+                  Choisissez vos dates et le nombre de campeurs.
+                </p>
+
+                <div class="row g-3">
+                  <div class="col-12 col-md-6">
+                    <label for="startDate" class="form-label fw-semibold">
+                      Date d'arrivée
+                    </label>
+                    <input
+                      id="startDate"
+                      v-model="form.startDate"
+                      type="date"
+                      class="form-control form-control-lg"
+                      :class="{ 'is-invalid': errors.startDate }"
+                    />
+                    <div v-if="errors.startDate" class="invalid-feedback">
+                      {{ errors.startDate }}
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label for="endDate" class="form-label fw-semibold">
+                      Date de départ
+                    </label>
+                    <input
+                      id="endDate"
+                      v-model="form.endDate"
+                      type="date"
+                      class="form-control form-control-lg"
+                      :class="{ 'is-invalid': errors.endDate }"
+                    />
+                    <div v-if="errors.endDate" class="invalid-feedback">
+                      {{ errors.endDate }}
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label for="guests" class="form-label fw-semibold">
+                      Nombre de personnes
+                    </label>
+                    <input
+                      id="guests"
+                      v-model.number="form.guests"
+                      type="number"
+                      class="form-control form-control-lg"
+                      :class="{ 'is-invalid': errors.guests }"
+                      min="1"
+                      :max="campsiteStore.campsite.capacity"
+                    />
+                    <div v-if="errors.guests" class="invalid-feedback">
+                      {{ errors.guests }}
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label for="vehicleLength" class="form-label fw-semibold">
+                      Longueur du véhicule
+                    </label>
+                    <input
+                      id="vehicleLength"
+                      v-model.number="form.vehicleLength"
+                      type="number"
+                      class="form-control form-control-lg"
+                      :class="{ 'is-invalid': errors.vehicleLength }"
+                      min="1"
+                      :max="campsiteStore.campsite.maxVehicleLength"
+                    />
+
+                    <small
+                      v-if="campsiteStore.campsite.type !== 'vr'"
+                      class="text-muted"
+                    >
+                      Optionnel pour ce type d'emplacement.
+                    </small>
+
+                    <small v-else class="text-muted">
+                      Obligatoire pour les emplacements VR.
+                    </small>
+
+                    <div v-if="errors.vehicleLength" class="invalid-feedback d-block">
+                      {{ errors.vehicleLength }}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn btn-success btn-lg w-100 mt-4 rounded-pill"
+                  :disabled="reservationStore.isLoading"
+                >
+                  <span
+                    v-if="reservationStore.isLoading"
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+
+                  {{ reservationStore.isLoading ? 'Réservation en cours...' : 'Réserver maintenant' }}
+                </button>
+
+                <div v-if="successMessage" class="alert alert-success mt-4 mb-0">
+                  {{ successMessage }}
+                </div>
+
+                <div v-if="reservationStore.error" class="alert alert-danger mt-4 mb-0">
+                  {{ reservationStore.error }}
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div v-else class="card border-0 shadow-sm rounded-4 text-center">
+            <div class="card-body p-5">
+              <h2 class="h4 text-success fw-bold mb-3">
+                Connectez-vous pour réserver
+              </h2>
+
+              <p class="text-muted mb-4">
+                Vous devez être connecté pour effectuer une réservation.
+              </p>
+
+              <router-link to="/login" class="btn btn-success btn-lg rounded-pill px-5">
+                Se connecter
+              </router-link>
+            </div>
           </div>
         </div>
-
-        <div class="mb-3">
-          <label for="guests" class="form-label">Nombre de personnes</label>
-          <input
-            id="guests"
-            v-model.number="form.guests"
-            type="number"
-            class="form-control"
-            :class="{ 'is-invalid': errors.guests }"
-            min="1"
-            :max="campsiteStore.campsite.capacity"
-          />
-          <div v-if="errors.guests" class="invalid-feedback">
-            {{ errors.guests }}
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="vehicleLength" class="form-label">Longueur du véhicule</label>
-          <input
-            id="vehicleLength"
-            v-model.number="form.vehicleLength"
-            type="number"
-            class="form-control"
-            :class="{ 'is-invalid': errors.vehicleLength }"
-            min="1"
-            :max="campsiteStore.campsite.maxVehicleLength"
-          />
-
-          <small v-if="campsiteStore.campsite.type !== 'vr'" class="text-muted">
-            Optionnel pour ce type d'emplacement.
-          </small>
-
-          <small v-else class="text-muted">
-            Obligatoire pour les emplacements VR.
-          </small>
-
-          <div v-if="errors.vehicleLength" class="invalid-feedback d-block">
-            {{ errors.vehicleLength }}
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          class="btn btn-primary"
-          :disabled="reservationStore.isLoading"
-        >
-          {{ reservationStore.isLoading ? 'Réservation en cours...' : 'Réserver' }}
-        </button>
-
-        <p v-if="successMessage" class="text-success mt-3">
-          {{ successMessage }}
-        </p>
-
-        <p v-if="reservationStore.error" class="text-danger mt-3">
-          {{ reservationStore.error }}
-        </p>
-      </form>
-       </div>
-      <div v-else class="p-3 border rounded text-center">
-      <p class="mb-3">Vous devez être connecté pour effectuer une réservation.</p>
-      <router-link to="/login" class="btn btn-primary">Se connecter</router-link>
-</div>
+      </div>
     </div>
 
-    <p v-else>Chargement de l'emplacement...</p>
-  </div>
+    <div v-else class="text-center py-5">
+      <div class="spinner-border text-success mb-3" role="status"></div>
+
+      <p class="text-muted">
+        Chargement de l'emplacement...
+      </p>
+    </div>
+  </main>
 </template>
 
 <script setup>

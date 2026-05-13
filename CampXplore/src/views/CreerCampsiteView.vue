@@ -6,6 +6,7 @@
 
       <div v-if="messageSucces" class="alert alert-success">{{ messageSucces }}</div>
       <div v-if="messageErreur" class="alert alert-danger">{{ messageErreur }}</div>
+<p v-if="campsiteStore.error">{{ campsiteStore.error }}</p>
 
       <div class="mb-3">
         <label for="name" class="form-label">Nom de l'emplacement</label>

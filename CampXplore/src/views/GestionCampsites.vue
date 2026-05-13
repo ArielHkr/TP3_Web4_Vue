@@ -7,6 +7,8 @@
 <p v-if="messageErreur" class="alert alert-danger">
   {{ messageErreur }}
 </p>
+<p v-if="campsiteStore.error">{{ campsiteStore.error }}</p>
+
 <p v-if="messageSuccess" class="alert alert-success mt-3">
   {{ messageSuccess }}
 </p>

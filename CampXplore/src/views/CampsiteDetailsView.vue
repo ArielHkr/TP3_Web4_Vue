@@ -2,7 +2,7 @@
   <div class="container my-4">
     <div v-if="campsiteStore.campsite">
       <h1 class="mb-4">Réserver un emplacement</h1>
-
+      <p>{{ campsiteStore.error }}</p>
       <section class="mb-4 p-3 border rounded">
         <h2>{{ campsiteStore.campsite.name }}</h2>
 

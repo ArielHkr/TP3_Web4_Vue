@@ -41,6 +41,8 @@
       </div>
 
       <div v-else class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+<p v-if="campsiteStore.error">{{ campsiteStore.error }}</p>
+
         <CampsiteCard
           v-for="campsite in campsiteStore.campsites"
           :key="campsite.id"

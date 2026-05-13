@@ -5,11 +5,10 @@
     <div v-if="campsiteStore.campsite">
       <form @submit.prevent="soumettreFormulaire" class="p-4 border rounded" novalidate>
 
-        <!-- Message global -->
         <div v-if="messageSucces" class="alert alert-success">{{ messageSucces }}</div>
         <div v-if="messageErreur" class="alert alert-danger">{{ messageErreur }}</div>
+<p v-if="campsiteStore.error">{{ campsiteStore.error }}</p>
 
-        <!-- Nom -->
         <div class="mb-3">
           <label for="name" class="form-label">Nom de l'emplacement</label>
           <input
@@ -22,7 +21,6 @@
           <div v-if="erreurs.name" class="invalid-feedback">{{ erreurs.name }}</div>
         </div>
 
-        <!-- Lieu -->
         <div class="mb-3">
           <label for="location" class="form-label">Lieu</label>
           <input
@@ -35,7 +33,6 @@
           <div v-if="erreurs.location" class="invalid-feedback">{{ erreurs.location }}</div>
         </div>
 
-        <!-- Description -->
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
           <textarea
@@ -46,7 +43,6 @@
           />
         </div>
 
-        <!-- Type -->
         <div class="mb-3">
           <label for="type" class="form-label">Type</label>
           <select
@@ -63,7 +59,6 @@
           <div v-if="erreurs.type" class="invalid-feedback">{{ erreurs.type }}</div>
         </div>
 
-        <!-- Prix par nuit -->
         <div class="mb-3">
           <label for="pricePerNight" class="form-label">Prix par nuit ($)</label>
           <input
@@ -77,7 +72,6 @@
           <div v-if="erreurs.pricePerNight" class="invalid-feedback">{{ erreurs.pricePerNight }}</div>
         </div>
 
-        <!-- Capacité -->
         <div class="mb-3">
           <label for="capacity" class="form-label">Capacité (personnes)</label>
           <input
@@ -91,7 +85,6 @@
           <div v-if="erreurs.capacity" class="invalid-feedback">{{ erreurs.capacity }}</div>
         </div>
 
-        <!-- Longueur max véhicule -->
         <div class="mb-3">
           <label for="maxVehicleLength" class="form-label">Longueur max véhicule (m)</label>
           <input
@@ -108,7 +101,6 @@
           <div v-if="erreurs.maxVehicleLength" class="invalid-feedback d-block">{{ erreurs.maxVehicleLength }}</div>
         </div>
 
-        <!-- Commodités -->
         <div class="mb-4">
           <label class="form-label">Commodités</label>
           <div class="d-flex flex-wrap gap-2">

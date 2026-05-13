@@ -8,7 +8,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const error = ref(null)
   const apiUrl = import.meta.env.VITE_API_URL
 
-  const getHeaders = () => {
+  const AuthHeaders = () => {
   const apiKey = import.meta.env.VITE_API_KEY
   const token = localStorage.getItem('token')
 
@@ -25,7 +25,7 @@ export const useReservationStore = defineStore('reservation', () => {
     try {
       const res = await fetch(`${apiUrl}/api/reservations/${id}`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: AuthHeaders(),
       })
 
       const data = await res.json()
@@ -49,7 +49,7 @@ export const useReservationStore = defineStore('reservation', () => {
     try {
       const res = await fetch(`${apiUrl}/api/reservations`, {
         method: 'GET',
-        headers: getHeaders(),
+        headers: AuthHeaders(),
       })
       const data = await res.json()
 
@@ -71,7 +71,7 @@ export const useReservationStore = defineStore('reservation', () => {
   try {
     const res = await fetch(`${apiUrl}/api/reservations`, {
       method: 'POST',
-      headers: getHeaders(),
+      headers: AuthHeaders(),
       body: JSON.stringify(reservationData),
     })
 
@@ -100,7 +100,7 @@ const updateReservation = async (id, reservationData) => {
   try {
     const res = await fetch(`${apiUrl}/api/reservations/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
+      headers: AuthHeaders(),
       body: JSON.stringify(reservationData),
     })
 
@@ -132,7 +132,7 @@ const updateReservationStatus = async (id, status) => {
   try {
     const res = await fetch(`${apiUrl}/api/reservations/${id}`, {
       method: 'PATCH',
-      headers: getHeaders(),
+      headers: AuthHeaders(),
       body: JSON.stringify({ status }),
     })
 
@@ -152,7 +152,6 @@ const updateReservationStatus = async (id, status) => {
   } catch (err) {
     console.log(err)
     error.value = err.message
-
     throw err
   } finally {
     isLoading.value = false

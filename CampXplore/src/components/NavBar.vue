@@ -27,6 +27,9 @@
         <li class="nav-item" v-if="!isLogged">
           <router-link class="nav-link" :to="{ name: 'Register' }">Inscription</router-link>
         </li>
+        <li class="nav-item" v-if="isLogged">
+          <router-link class="nav-link" :to="{ name: 'AdminCampsites' }">Gestion des campsites</router-link>
+        </li>
          <li class="nav-item" v-if="isLogged && isAdmin">
           <router-link class="nav-link" :to="{ name: 'AdminReservations' }">Gestion des réservations</router-link>
         </li>

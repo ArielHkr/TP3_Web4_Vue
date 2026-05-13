@@ -73,6 +73,28 @@ const router = createRouter({
       name:'Forbidden',
       component: () => import('@/views/Forbidden.vue'),
     },
+    {
+      path:'/AdminCampsites',
+      name:'AdminCampsites',
+      component: ()=> import('@/views/GestionCampsites.vue')
+    },
+    {
+      path:'/campsites/update/:id',
+      name:'UpdateCampsite',
+      components : () => import('@/views/ModifierCampsiteView.vue'),
+      meta: {requiresAuth: true, role: 'admin'}
+    },
+    {
+     path: '/admin/campsites/:id/modifier',
+     name: 'UpdateCampsite',
+     component: () => import('@/views/ModifierCampsiteView.vue'),
+     props: true,
+     },
+     {
+     path: '/admin/campsites/creer',
+     name: 'CreerCampsite',
+     component: () => import('@/views/CreerCampsiteView.vue'),
+     },
   ],
 })
 router.beforeEach((to) => {

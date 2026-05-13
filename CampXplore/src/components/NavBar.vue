@@ -1,11 +1,23 @@
 <template>
-  <nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
-    <div class="container">
-      <h1>
-        <router-link to="/" class="text-white text-decoration-none">
-          CampXplore
-        </router-link>
-      </h1>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-success shadow-sm sticky-top"> 
+     <div class="container">
+            <h1>
+      <router-link
+        to="/"
+        class="navbar-brand d-flex align-items-center gap-2 text-white text-decoration-none"
+      >
+        <span
+          class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center"
+          style="width: 40px; height: 40px;"
+        >
+          <i class="bi bi-tree-fill text-white"></i>
+        </span>
+      
+        <span class="fw-bold fs-4">
+          Camp<span class="text-success">Xplore</span>
+        </span>
+      </router-link>
+            </h1>
 
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -31,12 +43,12 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Zone Admin
           </a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu bg-black">
             <li>
-              <router-link class="dropdown-item" :to="{ name: 'AdminCampsites' }">Gestion des campsites</router-link>
+              <router-link class="dropdown-item text-success" :to="{ name: 'AdminCampsites' }">Gestion des campsites</router-link>
             </li>
             <li v-if="isAdmin">
-              <router-link class="dropdown-item" :to="{ name: 'AdminReservations' }">Gestion des réservations</router-link>
+              <router-link class="dropdown-item text-success" :to="{ name: 'AdminReservations' }">Gestion des réservations</router-link>
             </li>
           </ul>
         </li>
@@ -44,9 +56,9 @@
          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
            Salut {{ authStore.user?.firstName }} !
          </a>
-         <ul class="dropdown-menu dropdown-menu-end">
+         <ul class="dropdown-menu dropdown-menu-end bg-black">
            <li>
-             <router-link class="dropdown-item" to="/profil">Mon profil</router-link>
+             <router-link class="dropdown-item text-success" to="/profil">Mon profil</router-link>
            </li>
            <li><hr class="dropdown-divider"></li>
            <li>

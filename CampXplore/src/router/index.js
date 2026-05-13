@@ -31,7 +31,6 @@ const router = createRouter({
       name: 'CampsiteDetailsView',
       component: () => import('@/views/CampsiteDetailsView.vue'),
       props: true,
-      meta: {requiresAuth: true}
     },
     { 
       path: '/:pathMatch(.*)*',
@@ -79,15 +78,10 @@ const router = createRouter({
       component: ()=> import('@/views/GestionCampsites.vue')
     },
     {
-      path:'/campsites/update/:id',
-      name:'UpdateCampsite',
-      components : () => import('@/views/ModifierCampsiteView.vue'),
-      meta: {requiresAuth: true, role: 'admin'}
-    },
-    {
      path: '/admin/campsites/:id/modifier',
      name: 'UpdateCampsite',
      component: () => import('@/views/ModifierCampsiteView.vue'),
+     meta: {requiresAuth: true, role: 'admin'},
      props: true,
      },
      {

@@ -1,33 +1,82 @@
 <template>
-  <div class="container py-5">
+  <main class="container py-5">
     <div class="row justify-content-center">
-      <div class="col-12 col-md-8 col-lg-6">
-        <h1 class="text-center mb-4">Connexion</h1>
+      <div class="col-12 col-md-8 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4">
+          <div class="card-body p-4 p-md-5">
+            <div class="text-center mb-4">
+              <h1 class="h3 fw-bold mb-2">Connexion</h1>
+              <p class="text-muted mb-0">
+                Connectez-vous à votre compte
+              </p>
+            </div>
 
-        <form @submit.prevent="login">
-          <div class="mb-3">
-            <label for="email" class="form-label">Courriel</label>
-            <input id="email" type="email" class="form-control" v-model="email" required />
+            <form @submit.prevent="login" novalidate>
+              <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">
+                  Courriel
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  class="form-control form-control-lg"
+                  v-model="email"
+                  placeholder="exemple@email.com"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label fw-semibold">
+                  Mot de passe
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  class="form-control form-control-lg"
+                  v-model="password"
+                  placeholder="Entrez votre mot de passe"
+                  required
+                />
+              </div>
+
+              <div v-if="authStore.error" class="alert alert-danger">
+                {{ authStore.error }}
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-success btn-lg w-100 mt-2"
+                :disabled="authStore.isLoading"
+              >
+                <span
+                  v-if="authStore.isLoading"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+
+                {{ authStore.isLoading ? 'Connexion...' : 'Se connecter' }}
+              </button>
+
+              <div class="text-center mt-4">
+                <span class="text-muted">Vous n’avez pas de compte ?</span>
+
+                <router-link
+                  class="fw-semibold text-decoration-none ms-1"
+                  :to="{ name: 'Register' }"
+                >
+                  Créer un compte
+                </router-link>
+              </div>
+            </form>
           </div>
-
-          <div class="mb-3">
-            <label for="password" class="form-label">Mot de passe</label>
-            <input id="password" type="password" class="form-control" v-model="password" required />
-          </div>
-
-          <p v-if="authStore.error" class="text-danger mb-3">
-            {{ authStore.error }}
-          </p>
-
-          <button type="submit" class="btn btn-primary w-100" :disabled="authStore.isLoading">
-            {{ authStore.isLoading ? 'Connexion...' : 'Se connecter' }}
-          </button>
-          <router-link class="nav-link" :to="{ name: 'Register' }">Créer un compte</router-link>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
+
 <script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'

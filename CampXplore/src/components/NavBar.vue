@@ -27,21 +27,33 @@
         <li class="nav-item" v-if="!isLogged">
           <router-link class="nav-link" :to="{ name: 'Register' }">Inscription</router-link>
         </li>
-        <li class="nav-item" v-if="isLogged">
-          <router-link class="nav-link" :to="{ name: 'AdminCampsites' }">Gestion des campsites</router-link>
+       <li class="nav-item dropdown" v-if="isLogged">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Zone Admin
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <router-link class="dropdown-item" :to="{ name: 'AdminCampsites' }">Gestion des campsites</router-link>
+            </li>
+            <li v-if="isAdmin">
+              <router-link class="dropdown-item" :to="{ name: 'AdminReservations' }">Gestion des réservations</router-link>
+            </li>
+          </ul>
         </li>
-         <li class="nav-item" v-if="isLogged && isAdmin">
-          <router-link class="nav-link" :to="{ name: 'AdminReservations' }">Gestion des réservations</router-link>
-        </li>
-        <li class="nav-item" v-if="isLogged">
-          <router-link class="nav-link" to="/profil">
-          Salut  {{ authStore.user?.firstName }} !
-          </router-link>
-        </li>
-
-        <li class="nav-item" v-if="isLogged">
-          <a href="#" @click.prevent="logout" class="nav-link">Déconnexion</a>
-        </li>
+       <li class="nav-item dropdown" v-if="isLogged">
+         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           Salut {{ authStore.user?.firstName }} !
+         </a>
+         <ul class="dropdown-menu dropdown-menu-end">
+           <li>
+             <router-link class="dropdown-item" to="/profil">Mon profil</router-link>
+           </li>
+           <li><hr class="dropdown-divider"></li>
+           <li>
+             <a href="#" @click.prevent="logout" class="dropdown-item text-danger">Déconnexion</a>
+           </li>
+         </ul>
+       </li>
       </ul>
     </div>
   </nav>

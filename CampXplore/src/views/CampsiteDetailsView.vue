@@ -39,8 +39,8 @@
           {{ campsiteStore.campsite.amenities.join(', ') }}
         </p>
       </section>
-
-      <form @submit.prevent="submitReservation" class="p-3 border rounded" novalidate>
+       <div v-if="isLogged">
+        <form @submit.prevent="submitReservation" class="p-3 border rounded" novalidate>
         <h2 class="mb-3">Informations de réservation</h2>
 
         <div class="mb-3">
@@ -128,6 +128,11 @@
           {{ reservationStore.error }}
         </p>
       </form>
+       </div>
+      <div v-else class="p-3 border rounded text-center">
+      <p class="mb-3">Vous devez être connecté pour effectuer une réservation.</p>
+      <router-link to="/login" class="btn btn-primary">Se connecter</router-link>
+</div>
     </div>
 
     <p v-else>Chargement de l'emplacement...</p>
@@ -138,7 +143,10 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useCampsiteStore } from '@/stores/campsite'
 import { useReservationStore } from '@/stores/reservation'
+import { computed } from 'vue'
+const tokenRef = ref(localStorage.getItem('token'))
 
+const isLogged = computed(() => !!tokenRef.value)
 const props = defineProps({
   id: {
     type: [String, Number],

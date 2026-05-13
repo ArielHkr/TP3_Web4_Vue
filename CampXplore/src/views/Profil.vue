@@ -1,46 +1,97 @@
 <template>
-  <div>
-    <form @submit.prevent="enregistrer" novalidate>
-      <div>
-        <label for="firstName">Prénom:</label>
-        <input type="text" v-model="prenom" id="firstName">
-      </div>
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-4">
+            <h1 class="h4 mb-4 text-center">
+              Mon profil
+            </h1>
 
-      <div>
-        <label for="lastName">Nom:</label>
-        <input type="text" v-model="nom" id="lastName">
-      </div>
-      <div>
-        <label for="role">Role:</label>
-        <input type="text" v-model="role" disabled="true">
-      </div>
-      <div>
-        <label for="phoneNumber">Téléphone:</label>
-        <input
-          type="text"
-          v-model="phoneNumber"
-          id="phoneNumber"
-          maxlength="10"
-        >
-      </div>
+            <form @submit.prevent="enregistrer" novalidate>
+              <div class="mb-3">
+                <label for="firstName" class="form-label">Prénom</label>
+                <input
+                  type="text"
+                  v-model="prenom"
+                  id="firstName"
+                  class="form-control"
+                  placeholder="Entrez votre prénom"
+                >
+              </div>
 
-      <div v-if="messageErreur">
-        {{ messageErreur }}
-      </div>
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Nom</label>
+                <input
+                  type="text"
+                  v-model="nom"
+                  id="lastName"
+                  class="form-control"
+                  placeholder="Entrez votre nom"
+                >
+              </div>
 
-      <button type="submit" :disabled="authStore.isLoading || !champModifie">
-        {{ authStore.isLoading ? 'Enregistrement...' : 'Enregistrer' }}
-      </button>
-      <div>
-        <router-link to="/resetPassword">
-                Changer le mot de passe
-      </router-link>
+              <div class="mb-3">
+                <label for="role" class="form-label">Rôle</label>
+                <input
+                  type="text"
+                  v-model="role"
+                  id="role"
+                  class="form-control bg-light"
+                  disabled
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Téléphone</label>
+                <input
+                  type="text"
+                  v-model="phoneNumber"
+                  id="phoneNumber"
+                  maxlength="10"
+                  class="form-control"
+                  placeholder="Ex: 5141234567"
+                >
+                <div class="form-text">
+                  Le numéro doit contenir exactement 10 chiffres.
+                </div>
+              </div>
+
+              <div v-if="messageErreur" class="alert alert-danger">
+                {{ messageErreur }}
+              </div>
+
+              <div v-if="authStore.success" class="alert alert-success">
+                {{ authStore.success }}
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary w-100"
+                :disabled="authStore.isLoading || !champModifie"
+              >
+                <span
+                  v-if="authStore.isLoading"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+
+                {{ authStore.isLoading ? 'Enregistrement...' : 'Enregistrer' }}
+              </button>
+
+              <div class="text-center mt-3">
+                <router-link to="/resetPassword" class="link-primary text-decoration-none">
+                  Changer le mot de passe
+                </router-link>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-      <div>{{ authStore.success }}</div>
-    </form>
-  </div>
+    </div>
+  </main>
 </template>
-
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
